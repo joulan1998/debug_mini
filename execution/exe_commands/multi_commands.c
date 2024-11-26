@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 16:43:06 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/11/25 17:17:01 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/26 09:37:39 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,5 +114,6 @@ int	multi_commands(t_minishell	*data)
 	if (waitpid_fnc(data, pid) == -1)
 		return (-1);
 	close_pipes(pipe_fd, size - 1);
+	// free_set_args(data->commands);
 	return (data->env_lst->exit_status);
 }

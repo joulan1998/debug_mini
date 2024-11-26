@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:05:32 by yosabir           #+#    #+#             */
-/*   Updated: 2024/11/25 16:31:27 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/26 09:33:04 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	exec(t_minishell *data)
 		result = exec_smpl_cmnd(data);
 	else if (ft_lstsize_c(data->commands) >= 2)
 		result = multi_commands(data);
+	free_set_args(data->commands);
 	// if (result == -1)
 		// return(ft_err_msg((t_error){COMMAND_NOT_FOUND,ENO_CMMND_NT_FOND,data->args[0]}), -1);
 	return (result);

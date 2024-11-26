@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:47:49 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/11/26 08:58:14 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/26 09:31:53 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ char	*find_path(char	*path, char *ftn)
 
 	i = 0;
 	table = ft_split(path, ':');
+	free(path);
 	while (i < count_table_entries(table))
 	{
 		res = ft_strjoin(table[i], "/");
@@ -45,7 +46,6 @@ char	*find_path(char	*path, char *ftn)
 		if (access (res, X_OK) == 0)
 		{
 			ft_free_table (&table);
-			free(path);
 			return (res);
 		}
 		free(res);
@@ -71,10 +71,10 @@ char	*check_acces(t_minishell *data, char *ftn)
 	{
 		node_contet = ft_find_node(data, "PATH");
 		if (!node_contet)
-			return (free_table(data), NULL);
+			return (free_table(data), NULL);   //maybe a shoul not free it
 		else
 			return (find_path(node_contet, ftn));
-		// ft_free_table (&table);
+		ft_free_table (&table);
 	}
 	return (ft_strdup(ftn));
 }
@@ -137,7 +137,7 @@ int	exec_smpl_cmnd(t_minishell *data)
 	}
 	// exit(9);
 	free (path);
-		exit(9);
+		// exit(9);
 	if (waitpid_fnc(data, fork_res) == -1)
 		return (-1);
 	return (data->env_lst->exit_status);
