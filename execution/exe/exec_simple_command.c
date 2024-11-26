@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:47:49 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/11/24 19:18:33 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/26 08:58:14 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*find_path(char	*path, char *ftn)
 		if (access (res, X_OK) == 0)
 		{
 			ft_free_table (&table);
-			free(path); // the last leaks that ysf told me
+			free(path);
 			return (res);
 		}
 		free(res);
@@ -74,33 +74,34 @@ char	*check_acces(t_minishell *data, char *ftn)
 			return (free_table(data), NULL);
 		else
 			return (find_path(node_contet, ftn));
-		// free (node_contet);
-		ft_free_table (&table);
+		// ft_free_table (&table);
 	}
 	return (ft_strdup(ftn));
 }
 
 void	errno_handling(t_minishell *data, int *err, char *path)
 {
-	if (*err == EPERM)
-	{
-		ft_putstr_fd(PROMPT, 2);
-		ft_error(data->commands->args[0], PERM_ERROR);
-		exit(126);
-	}
-	if (*err == EACCES || *err == EFAULT)
-	{
-		free (path);
-		perror(PROMPT);
-		exit(126);
-	}
 	if (*err == ENOENT && !ft_strchr(path, '/'))
 	{
 		ft_error(path, COMMAND_NOT_FOUND);
 		free (path);
 		exit(127);
 	}
-	free (path);
+	free(path);
+	if (*err == EPERM)
+	{
+		// free(path);
+		ft_putstr_fd(PROMPT, 2);
+		ft_error(data->commands->args[0], PERM_ERROR);
+		exit(126);
+	}
+	if (*err == EACCES || *err == EFAULT)
+	{
+		// free (path);
+		perror(PROMPT);
+		exit(126);
+	}
+	// free (path);
 	perror(PROMPT);
 	exit (127);
 }
@@ -110,8 +111,16 @@ int	exec_smpl_cmnd(t_minishell *data)
 	char	*path;
 	int		fork_res;
 
+	// printf("args0 %s\n",data->commands->args[0]);
+	// printf("input %d\n",data->commands->input);
+	if (!data->commands->args || 
+		((data->commands->input == -1)/* && (data->commands->args[0])*/))
+	{
+		if (data->commands->input == -1)
+			ft_error(data->commands->args[1], NOSUCHFORD);
+		return -1;
+	}
 	path = check_acces (data, data->commands->args[0]);
-	// exit(99);
 	fork_res = fork();
 	if (fork_res == -1)
 		return (perror (PROMPT), -1);
@@ -121,13 +130,24 @@ int	exec_smpl_cmnd(t_minishell *data)
 			dup2(data->commands->input, 0);
 		if (data->commands->output)
 			dup2(data->commands->output, 1);
+		printf(">>>>DSDSD:%p\n",&data->commands->output);
 		execve(path, data->commands->args, (data->env));
 		free(path);
 		errno_handling(data, &errno, path);
 	}
+	// exit(9);
 	free (path);
-	// ft_free_table(&data->commands->args);
+		exit(9);
 	if (waitpid_fnc(data, fork_res) == -1)
 		return (-1);
 	return (data->env_lst->exit_status);
 }
+
+
+
+
+
+
+
+
+// i should fix the simple command all cases

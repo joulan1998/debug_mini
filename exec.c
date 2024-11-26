@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:05:32 by yosabir           #+#    #+#             */
-/*   Updated: 2024/11/24 20:22:02 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/25 16:31:27 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,7 @@ int	exec(t_minishell *data)
 	else if (ft_lstsize_c(data->commands) == 1  && data->list->type == SIMPLE_COMMAND)
 		result = exec_smpl_cmnd(data);
 	else if (ft_lstsize_c(data->commands) >= 2)
-	{
 		result = multi_commands(data);
-		exit(19);
-	}
-	// ft_free_table(&data->commands);
-	// ft_free_table(&data->args);
 	// if (result == -1)
 		// return(ft_err_msg((t_error){COMMAND_NOT_FOUND,ENO_CMMND_NT_FOND,data->args[0]}), -1);
 	return (result);
@@ -35,10 +30,8 @@ int	exec(t_minishell *data)
 
 int	start_execution(t_minishell *data)
 {
-	// puts("ddjksjdjks");
-	// int result;
-	// if (!data->list)
-	// 	return (-1);
+	if (!data->list)
+		return (-1);
 	if (!ft_strncmp(data->list->content,"cd",3))
 		data->env_lst->exit_status = ft_cd(data);
 	else if (!ft_strncmp(data->list->content,"pwd",4))
@@ -53,8 +46,6 @@ int	start_execution(t_minishell *data)
 		ft_exit(data);
 	else if (!ft_strncmp(data->list->content, "unset", 6))
 		ft_unset(data);
-	// ft_free_table(&data->commands->args);
-	// free_list(data->list);
 	// else 
 	// 	ft_err_msg((t_error){COMMAND_NOT_FOUND,ENO_CMMND_NT_FOND,data->args[0]});
 	return (data->env_lst->exit_status); // it was -1 edited by yosabir

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yosabir <yosabir@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 11:07:04 by yosabir           #+#    #+#             */
-/*   Updated: 2024/11/23 01:26:50 by yosabir          ###   ########.fr       */
+/*   Updated: 2024/11/25 17:12:38 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ static void	handle_single_char(char *str, int i, t_list **lst)
 		new_node->command = RD_IN;
 	else if (str[i] == '>')
 		new_node->command = RD_OUT;
+	// free(substring);
 	ft_lstadd_back(lst, new_node);
 }
 

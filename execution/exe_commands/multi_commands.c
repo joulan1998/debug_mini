@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 16:43:06 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/11/24 20:34:56 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:17:01 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,15 @@ int	multi_util(t_minishell *data, set_args *args, int *fds, int *to_close)
 		errno_handling(data, &errno, path);
 	}
 	free(path); ///another leak
-	// free_set_args(args);
-	// free(args->args[0]);
-	// free(args->args[1]);
 	return (fork_res);
 }
 
 void	close_pipes(int	**table_fd, int size)
 {
 	int	index;
+	int	**tmp;
 
+	tmp = table_fd;
 	index = size - 1;
 	while (index >= 0)
 	{
@@ -53,6 +52,13 @@ void	close_pipes(int	**table_fd, int size)
 		close((table_fd[index][0]));
 		index--;
 	}
+	index = size - 1;
+	while (index >= 0)
+	{
+		free(tmp[index]);
+		index--;
+	}
+	free(tmp);
 }
 
 int	multi_helper(t_minishell *data, set_args *args, int i, int **pipes)
@@ -108,6 +114,5 @@ int	multi_commands(t_minishell	*data)
 	if (waitpid_fnc(data, pid) == -1)
 		return (-1);
 	close_pipes(pipe_fd, size - 1);
-	// exit(32);
 	return (data->env_lst->exit_status);
 }

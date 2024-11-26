@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yosabir <yosabir@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:29:24 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/11/22 22:53:00 by yosabir          ###   ########.fr       */
+/*   Updated: 2024/11/25 17:31:29 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ bool	test_flag(char *buffer)
 	return (false);
 }
 
-void	echo_final(char *s)
+void	echo_final(char *s,  int fd)
 {
 	while (*s)
 	{
@@ -45,7 +45,7 @@ void	echo_final(char *s)
 			s++;
 			continue ;
 		}
-		ft_putchar_fd(*s, 1);
+		ft_putchar_fd(*s, fd);
 		s++;
 	}
 }
@@ -63,11 +63,11 @@ int	ft_echo(t_minishell *data)
 		local++;
 	while (local && *local)
 	{
-		echo_final(*local);
-		ft_putstr_fd(" ", 1);
+		echo_final(*local, data->commands->output);
+		ft_putstr_fd(" ", data->commands->output);
 		local++;
 	}
 	if (!flag)
-		ft_putstr_fd("\n", 1);
+		ft_putstr_fd("\n", data->commands->output);
 	return (0);
 }

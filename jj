@@ -1,0 +1,10 @@
+Makefile
+exec.c
+exec.o
+execution
+includes
+jj
+main.c
+main.o
+minishell
+parcing

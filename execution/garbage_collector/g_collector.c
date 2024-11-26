@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 22:42:17 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/11/24 18:21:51 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/25 16:32:21 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,10 @@ void	free_set_args(set_args *list)
 			i = 0;
 			while (list->args[i])
 			{
-				printf("leaks i think >>>> %p\n", &list->args[i]);
 				free(list->args[i]);
 				list->args[i] = NULL;
-				// free((void *)list->input);
-				// free((void *)list->output);
 				i++;
 			}
-			// if (list->args)
-			// 	free(list->args);
-			printf("leaks i args >>>> %p\n", &list->args);
-			printf("leaks %d input >>>> %p\n",i, &list->input);
-			printf("leaks %d output >>>> %p\n",i,  &list->output);
-			printf("leaks i next >>>> %p\n", &list->next);
 			free(list->args);
 			// free(list);
 		}

@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:46:08 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/11/24 19:50:55 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/25 18:23:36 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ int	main(int argc, char **argv, char **env)
 		}
 		if (data.list)
 			execute_commands(&data);
-		if (data.commands)
-			free_set_args(data.commands);
-		exit(9);
+		if (data.commands->args)
+			ft_free_table(&data.commands->args);
+			// free_set_args(data.commands);
 	}
 }
