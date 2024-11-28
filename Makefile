@@ -6,7 +6,7 @@
 #    By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/28 03:45:54 by ael-garr          #+#    #+#              #
-#    Updated: 2024/11/25 17:15:50 by ael-garr         ###   ########.fr        #
+#    Updated: 2024/11/28 17:15:43 by ael-garr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,13 +18,13 @@ EXECUTION_SRC = main.c\
 				execution/init_signals.c\
 				execution/exe/exec_simple_command.c\
 				execution/utils/ft_find_node.c execution/utils/ft_free_table.c execution/utils/joinning_and_free.c\
-				execution/exe_commands/multi_commands.c execution/exe_commands/multi_utils.c\
+				execution/exe_commands/multi_commands.c execution/exe_commands/multi_utils.c execution/exe_commands/find_path.c\
 				execution/utils/for_merging.c\
 				execution/signals/init_signals.c\
 				execution/garbage_collector/g_collector.c exec.c
 PARCING_SRC = parcing/classing.c  parcing/helper.c parcing/expand.c parcing/expand_utils.c parcing/herdocfile.c\
               parcing/ofred.c parcing/parsing.c parcing/parsing_word_space.c parcing/settinglist.c parcing/syntax1.c parcing/syntax2.c\
-			  parcing/settinglist_utils.c  parcing/parsing_variable.c
+			  parcing/settinglist_utils.c  parcing/parsing_variable.c parcing/expand_utils2.c
 BASIC_SRC = $(EXECUTION_SRC) $(PARCING_SRC)
 
 OBJ = ${BASIC_SRC:.c=.o}

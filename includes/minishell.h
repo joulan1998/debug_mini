@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yosabir <yosabir@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 14:29:24 by yosabir           #+#    #+#             */
-/*   Updated: 2024/11/23 22:29:49 by yosabir          ###   ########.fr       */
+/*   Updated: 2024/11/28 13:23:20 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,8 +117,8 @@ typedef struct s_minishell {
 	int stdin;
 	int stdout;
 	char *old_path;
-	set_args *commands;
-	t_list *list;
+	set_args *commands; // list d exec
+	t_list *list; // list d token
 } t_minishell;
 
 // MINISHELL STRUCTURES AND ENUMERATIONS
@@ -228,6 +228,10 @@ char		*extract_variable(char *s);
 char		*get_variable_value(char *variable, t_environ *env);
 char		*contact_varstr(char *string, char *variable);
 int			get_variable_index(char *s);
+t_list		*process_variable(t_list *current, t_environ *env, int *flag);
+t_list		*process_double_quote(t_list *current, t_environ *env, int flag);
+t_list		*process_single_quote(t_list *current);
+
 
 // PARCING FUNCTION PROTOTYPES
 t_list		*parsing(char *str, t_environ *env);
@@ -277,5 +281,8 @@ t_list		*skip_spaces(t_list *token);
 int			is_special_char(char c);
 int			get_special_char(char *str);
 int			find(char *s, char sp);
+void		free_t_args(set_args *list);
+char	*find_path(char	*path, char *ftn);
+
 
 #endif // MINISHELL_H

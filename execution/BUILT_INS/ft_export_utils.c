@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yosabir <yosabir@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:21:55 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/11/17 10:07:16 by yosabir          ###   ########.fr       */
+/*   Updated: 2024/11/28 14:15:59 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	check_syntax_for_export(char *string)
 	if (ft_strlen(local) == 1)
 	{
 		if ((ft_isalpha(local[0])) || local[0] == '_')
-			return (free(local), 1);
+			return (free(local),1);
 		else
 			return (free(local), 0);
 	}

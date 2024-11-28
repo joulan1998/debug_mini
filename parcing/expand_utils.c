@@ -6,7 +6,7 @@
 /*   By: yosabir <yosabir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:40:58 by yosabir           #+#    #+#             */
-/*   Updated: 2024/11/21 17:46:02 by yosabir          ###   ########.fr       */
+/*   Updated: 2024/11/26 22:35:13 by yosabir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,7 @@ char	*expand_variable(t_list *token, t_environ *env)
 	while (env)
 	{
 		if (ft_strcmp(string, env->var) == 0)
-		{
 			return (free(string), ft_strdup(env->value));
-		}
 		else if (ft_strcmp(string, "?") == 0)
 			return (free(string), ft_itoa(env->exit_status));
 		env = env->next;

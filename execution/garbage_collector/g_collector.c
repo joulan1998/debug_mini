@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 22:42:17 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/11/25 16:32:21 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:31:35 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,24 +40,24 @@ void	free_set_args(set_args *list)
 {
 	set_args	*temp;
 	int			i;
+	if(!list || !list->args)
+		return ;
 
 	while (list)
 	{
-		if (list->args)
+		if (list->args/*  && list->args[0]*/)
 		{
 			temp = list->next;
 			i = 0;
-			while (list->args[i])
+			while (list->args && list->args[i])
 			{
 				free(list->args[i]);
 				list->args[i] = NULL;
 				i++;
 			}
-			free(list->args);
-			// free(list);
+			// free(list->args);
 		}
 		list = temp;
-		// list = list->next;
 	}
 }
 

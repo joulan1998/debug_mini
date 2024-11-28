@@ -6,7 +6,7 @@
 /*   By: yosabir <yosabir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 15:20:17 by yosabir           #+#    #+#             */
-/*   Updated: 2024/11/19 11:54:53 by yosabir          ###   ########.fr       */
+/*   Updated: 2024/11/26 20:35:38 by yosabir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int	is_valid_next(t_list *token)
 	return (token && (token->command == S_QUOTE
 			||token->command == D_QUOTE
 			|| token->command == WORD
-			|| token->command == VAR));
+			|| token->command == VAR
+			|| token->command == HEREDOC));
 }
 
 int	syntax_redpipe(t_list **lst)

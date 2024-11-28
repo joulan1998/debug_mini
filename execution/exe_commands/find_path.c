@@ -1,39 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_find_node.c                                     :+:      :+:    :+:   */
+/*   find_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/24 21:32:21 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/11/28 12:30:32 by ael-garr         ###   ########.fr       */
+/*   Created: 2024/11/27 17:17:20 by ael-garr          #+#    #+#             */
+/*   Updated: 2024/11/27 17:18:20 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*ft_find_node(t_minishell *data, char	*str)
+char	*find_path(char	*path, char *ftn)
 {
-	char		*local;
-	t_environ	*lst;
+	char	**table;
+	char	*res;
+	int		i;
 
-	local = NULL;
-	lst = data->env_lst;
-	while (lst->next && lst->var && lst->value)
+	i = 0;
+	table = ft_split(path, ':');
+	free(path);
+	while (i < count_table_entries(table))
 	{
-		if (lst->var && lst->value)
+		res = ft_strjoin(table[i], "/");
+		res = joinning_and_free(res, ftn);
+		if (access (res, X_OK) == 0)
 		{
-			if (ft_strncmp(lst->var, str, (ft_strlen(lst->var))) == 0)
-			{
-				local = ft_strdup(lst->value);
-				if (!local)
-					return (NULL);
-				return (local);
-			}
+			ft_free_table (&table);
+			return (res);
 		}
-		lst = lst->next;
+		free(res);
+		i++;
 	}
-	// if (!local)
-	// 	return (ft_strdup(OWN_PATH));
-	return (NULL);
+	ft_free_table(&table);
+	return (ft_strdup(ftn));
 }

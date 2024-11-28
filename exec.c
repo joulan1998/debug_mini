@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:05:32 by yosabir           #+#    #+#             */
-/*   Updated: 2024/11/26 09:33:04 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/28 12:40:18 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	exec(t_minishell *data)
 		result = exec_smpl_cmnd(data);
 	else if (ft_lstsize_c(data->commands) >= 2)
 		result = multi_commands(data);
-	free_set_args(data->commands);
+	// free_set_args(data->commands);
 	// if (result == -1)
 		// return(ft_err_msg((t_error){COMMAND_NOT_FOUND,ENO_CMMND_NT_FOND,data->args[0]}), -1);
 	return (result);
@@ -38,17 +38,14 @@ int	start_execution(t_minishell *data)
 	else if (!ft_strncmp(data->list->content,"pwd",4))
 		data->env_lst->exit_status = ft_pwd(data);
 	else if (!ft_strncmp(data->list->content, "echo", 5))
-		ft_echo(data);
+		data->env_lst->exit_status = ft_echo(data);
 	else if (!ft_strncmp(data->list->content, "export", 7))	
-		ft_export(data);
+		data->env_lst->exit_status = ft_export(data);
 	else if (!ft_strncmp(data->list->content, "env", 4))
-		ft_env(data);
+		data->env_lst->exit_status = ft_env(data);
 	else if (!ft_strncmp(data->list->content, "exit", 5))
-		ft_exit(data);
+		data->env_lst->exit_status = ft_exit(data);
 	else if (!ft_strncmp(data->list->content, "unset", 6))
-		ft_unset(data);
-	// else 
-	// 	ft_err_msg((t_error){COMMAND_NOT_FOUND,ENO_CMMND_NT_FOND,data->args[0]});
+		data->env_lst->exit_status = ft_unset(data);
 	return (data->env_lst->exit_status); // it was -1 edited by yosabir
-	// free(data->old_path);
 }

@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 14:06:33 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/10/30 14:17:40 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/27 14:54:58 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,12 @@ int	final_update(t_minishell *data, char *key, char *value, bool create)
 			}
 			lst = lst->next;
 		}
-		return (0);
+		return (free(key), 0);
 	}
 	else
-		return (ft_lstadd_back_env
-			(&data->env_lst, ft_lstnew_env(key, value)), 0);
+	{
+		ft_lstadd_back_env(&data->env_lst, ft_lstnew_env(key, value));
+		return(0);
+	}
 	return (1);
 }

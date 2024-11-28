@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:47:49 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/11/26 09:31:53 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/28 17:09:50 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,29 +30,14 @@ int	waitpid_fnc(t_minishell *data, int pid)
 	return (0);
 }
 
-char	*find_path(char	*path, char *ftn)
+void free_path_close_fd(char *path,t_minishell *data)
 {
-	char	**table;
-	char	*res;
-	int		i;
-
-	i = 0;
-	table = ft_split(path, ':');
-	free(path);
-	while (i < count_table_entries(table))
-	{
-		res = ft_strjoin(table[i], "/");
-		res = joinning_and_free(res, ftn);
-		if (access (res, X_OK) == 0)
-		{
-			ft_free_table (&table);
-			return (res);
-		}
-		free(res);
-		i++;
-	}
-	ft_free_table(&table);
-	return (ft_strdup(ftn));
+	if (path)
+		free(path);
+	if (data->commands->input > 2)
+		close(data->commands->input);
+	if (data->commands->output > 2)
+		close(data->commands->output);
 }
 
 char	*check_acces(t_minishell *data, char *ftn)
@@ -67,11 +52,12 @@ char	*check_acces(t_minishell *data, char *ftn)
 		return (NULL);
 	if (access (ftn, X_OK) == 0)
 		return (ft_strdup(ftn));
-	else
+	else if (data->env_lst)
 	{
 		node_contet = ft_find_node(data, "PATH");
 		if (!node_contet)
-			return (free_table(data), NULL);   //maybe a shoul not free it
+			return (free_set_args(data->commands), NULL);   //maybe a shoul not free it
+			// return (ft_strdup(OWN_PATH), NULL);   //maybe a shoul not free it
 		else
 			return (find_path(node_contet, ftn));
 		ft_free_table (&table);
@@ -81,6 +67,8 @@ char	*check_acces(t_minishell *data, char *ftn)
 
 void	errno_handling(t_minishell *data, int *err, char *path)
 {
+	close(data->commands->output);
+	close(data->commands->input);
 	if (*err == ENOENT && !ft_strchr(path, '/'))
 	{
 		ft_error(path, COMMAND_NOT_FOUND);
@@ -90,18 +78,15 @@ void	errno_handling(t_minishell *data, int *err, char *path)
 	free(path);
 	if (*err == EPERM)
 	{
-		// free(path);
 		ft_putstr_fd(PROMPT, 2);
 		ft_error(data->commands->args[0], PERM_ERROR);
 		exit(126);
 	}
 	if (*err == EACCES || *err == EFAULT)
 	{
-		// free (path);
 		perror(PROMPT);
 		exit(126);
 	}
-	// free (path);
 	perror(PROMPT);
 	exit (127);
 }
@@ -111,16 +96,14 @@ int	exec_smpl_cmnd(t_minishell *data)
 	char	*path;
 	int		fork_res;
 
-	// printf("args0 %s\n",data->commands->args[0]);
-	// printf("input %d\n",data->commands->input);
+	path = check_acces (data, data->commands->args[0]);
 	if (!data->commands->args || 
-		((data->commands->input == -1)/* && (data->commands->args[0])*/))
+		((data->commands->output == -1)/* && (data->commands->args[0])*/))
 	{
-		if (data->commands->input == -1)
+		if (data->commands->output == -1 || !path)
 			ft_error(data->commands->args[1], NOSUCHFORD);
 		return -1;
 	}
-	path = check_acces (data, data->commands->args[0]);
 	fork_res = fork();
 	if (fork_res == -1)
 		return (perror (PROMPT), -1);
@@ -128,16 +111,14 @@ int	exec_smpl_cmnd(t_minishell *data)
 	{
 		if (data->commands->input != 0)
 			dup2(data->commands->input, 0);
-		if (data->commands->output)
+		if (data->commands->output != 1)
 			dup2(data->commands->output, 1);
-		printf(">>>>DSDSD:%p\n",&data->commands->output);
-		execve(path, data->commands->args, (data->env));
-		free(path);
+		if(path)	
+			execve(path, data->commands->args, (data->env));
+		// free(path);
 		errno_handling(data, &errno, path);
 	}
-	// exit(9);
-	free (path);
-		// exit(9);
+	free_path_close_fd(path, data);
 	if (waitpid_fnc(data, fork_res) == -1)
 		return (-1);
 	return (data->env_lst->exit_status);

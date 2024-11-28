@@ -6,7 +6,7 @@
 /*   By: yosabir <yosabir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:44:50 by yosabir           #+#    #+#             */
-/*   Updated: 2024/11/23 22:59:01 by yosabir          ###   ########.fr       */
+/*   Updated: 2024/11/26 13:43:43 by yosabir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ void	storing_args(t_list **current, set_args *cmd_args, t_environ *env)
 	add = 1;
 	cmd_args->input = 0;
 	cmd_args->output = 1;
-	if((*current)->command ==  PIPE)
-			*current = (*current)->next;
-	while (*current &&  (*current)->command !=  PIPE)
+	if ((*current)->command == PIPE)
+		*current = (*current)->next;
+	while (*current && (*current)->command != PIPE)
 	{
 		if ((*current)->command == WORD || (*current)->command == S_QUOTE
 			|| (*current)->command == D_QUOTE || (*current)->command == VAR)

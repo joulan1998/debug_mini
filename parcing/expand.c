@@ -6,7 +6,7 @@
 /*   By: yosabir <yosabir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 15:25:02 by yosabir           #+#    #+#             */
-/*   Updated: 2024/11/23 20:30:43 by yosabir          ###   ########.fr       */
+/*   Updated: 2024/11/26 21:00:27 by yosabir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	*get_variable_value(char *variable, t_environ *env)
 	while (ev)
 	{
 		if (ft_strcmp(variable, ev->var) == 0)
-			return (ft_strdup(ev->value));
+			return (ft_strtrim(ev->value, " "));
 		ev = ev->next;
 	}
 	return (env->exit_status = 0, NULL);
@@ -66,11 +66,10 @@ char	*expand_here_doc(char *string, int dont_expand, t_environ *env)
 	{
 		value = get_variable_value(variable, env);
 		string = contact_varstr(string, value);
-		free(value);
 		free(variable);
 		variable = extract_variable(string);
 	}
-	return (free(variable), string);
+	return (free(variable), free(value), string);
 }
 
 char	*expand_double_q_variable(t_list *token, t_environ *env)
@@ -101,24 +100,20 @@ char	*expand_double_q_variable(t_list *token, t_environ *env)
 t_list	*expanding(t_list *list, t_environ *env)
 {
 	t_list	*current;
-	char	*new_content;
+	int		flag;
 
+	flag = 0;
 	current = list;
 	while (current)
 	{
 		current = skip_spaces(current);
 		if (!current)
 			return (NULL);
-		if (current && current->command == VAR)
-			current->content = expand_variable(current, env);
-		else if (current && current->command == D_QUOTE)
-			current->content = expand_double_q_variable(current, env);
+		current = process_variable(current, env, &flag);
+		if (current->command == D_QUOTE)
+			current = process_double_quote(current, env, flag);
 		else if (current->command == S_QUOTE)
-		{
-			new_content = ft_strtrim(current->content, "'");
-			free(current->content);
-			current->content = new_content;
-		}
+			current = process_single_quote(current);
 		current = current->next;
 	}
 	return (list);

@@ -6,7 +6,7 @@
 /*   By: ael-garr <ael-garr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:46:08 by ael-garr          #+#    #+#             */
-/*   Updated: 2024/11/26 09:32:13 by ael-garr         ###   ########.fr       */
+/*   Updated: 2024/11/28 17:15:20 by ael-garr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void f()
 {
+	// system("lsof -c minishell");
 	system("leaks minishell");
 }
 
@@ -25,10 +26,10 @@ void	initialize_minishell(t_minishell *data, char **env)
 	data->env_lst->exit_status = 0;
 }
 
-void	cleanup_and_exit(t_minishell *data)
+int	cleanup_and_exit(t_minishell *data)
 {
 	free(data->line);
-	exit(data->env_lst->exit_status);
+	return(data->env_lst->exit_status);
 }
 
 int	process_input(t_minishell *data)
@@ -49,10 +50,10 @@ int	process_input(t_minishell *data)
 
 void	execute_commands(t_minishell *data)
 {
-	g_signal = 1;
+
 	data->env_lst->exit_status = exec(data);
-	g_signal = 0;
-	// free_set_args(data->commands);
+	if(data->commands)
+		free_set_args(data->commands);
 	free_t_list(data->list);
 	free(data->line);
 }
@@ -60,6 +61,7 @@ void	execute_commands(t_minishell *data)
 int	main(int argc, char **argv, char **env)
 {
 	t_minishell	data;
+	
 	atexit(f);
 	(void)argc;
 	(void)argv;
@@ -68,21 +70,20 @@ int	main(int argc, char **argv, char **env)
 	{
 		data.line = readline(PROMPT);
 		if (!data.line || !ft_strcmp(data.line, "exit"))
-			cleanup_and_exit(&data);
-		if (data.line[0] == '\0')
+			return (cleanup_and_exit(&data));
+		if (data.line[0] == '\0' || process_input(&data) == -1)
 		{
 			free(data.line);
 			continue ;
 		}
-		if (process_input(&data) == -1)
+		if (g_signal == 3)
 		{
-			free(data.line);
+			data.env_lst->exit_status = 1;
+			g_signal = 1;
 			continue ;
 		}
 		if (data.list)
 			execute_commands(&data);
-		// if (data.commands->args)
-		// 	ft_free_table(&data.commands->args);
-			// free_set_args(data.commands);
 	}
+	clear_env_list(data.env_lst);
 }

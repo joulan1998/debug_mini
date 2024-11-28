@@ -6,11 +6,19 @@
 /*   By: yosabir <yosabir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 13:11:29 by yosabir           #+#    #+#             */
-/*   Updated: 2024/11/23 22:24:28 by yosabir          ###   ########.fr       */
+/*   Updated: 2024/11/26 21:30:43 by yosabir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	write_heredoc(t_hdc info, char *result, char *line)
+{
+	write(info.input, result, ft_strlen(result));
+	write(info.input, "\n", 1);
+	free(result);
+	(void)line;
+}
 
 t_hdc	open_create_herdoc_file(int i)
 {
@@ -38,6 +46,15 @@ t_hdc	open_create_herdoc_file(int i)
 	return (info);
 }
 
+static int	handle_tty_error(t_hdc info)
+{
+	int	fd;
+
+	(1) && (fd = open(ttyname(2), O_RDONLY), dup2(0, fd));
+	free(info.file_name);
+	return (info.input);
+}
+
 int	herdoc(int input, char *del, t_list *token, t_environ *env)
 {
 	char	*line;
@@ -45,24 +62,21 @@ int	herdoc(int input, char *del, t_list *token, t_environ *env)
 	int		dont_expand;
 	t_hdc	info;
 
-	dont_expand = (token->command == D_QUOTE || token->command == WORD);
+	dont_expand = (token->command == D_QUOTE || token->command == WORD
+			|| token->command == VAR);
 	info = open_create_herdoc_file(1);
-	line = readline("> ");
-	if (!line)
-		return (free(info.file_name), free(line), -1);
+	g_signal = 1;
 	while (1)
 	{
-		if (ft_strcmp(line, del) == 0)
+		line = readline("> ");
+		if (!ttyname(0))
+			return (handle_tty_error(info));
+		if (!line || ft_strcmp(line, del) == 0)
 			break ;
 		result = expand_here_doc(line, dont_expand, env);
-		write(info.input, result, ft_strlen(result));
-		write(info.input, "\n", 1);
-		free(result);
-		line = readline("> ");
-		if (!line)
-			return (free(info.file_name), free(line), -1);
+		write_heredoc(info, result, line);
 	}
 	close(info.input);
 	input = open(info.file_name, O_RDONLY);
-	return (free(line), free(info.file_name), input);
+	return (free(info.file_name), free(line), input);
 }
